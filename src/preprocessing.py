@@ -75,3 +75,26 @@ def ngram(sentences, n = 2):
     '''Studies the most common combination of words'''
     pass
 
+def vector_context(data):
+    ''' Take in a dataframe, and return the list of vector average of the sentences
+    using 'en_core_web_sm' from spacy '''
+    
+    #Loading 'en_core_web_sm' from spacy
+    nlp = spacy.load('en_core_web_sm')
+    
+    #Initializing output
+    output = []
+    
+    #Creting the vector average for each sentence
+    for index, row in data.iterrows():
+        vector = np.zeros(384) #initializing the sum of vector
+        length = len(row['sentence']) # number of words in the sentence
+        
+        # Getting the vector for each word in the sentence and adding them together
+        for word in nlp(row['sentence']):
+                vector += word.vector
+                
+        vector_average = vector / length # Dividing the sum of vectors to obtain the average
+        output.append(vector_average)
+
+    return output
